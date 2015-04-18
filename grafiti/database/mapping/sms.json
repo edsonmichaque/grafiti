@@ -1,0 +1,25 @@
+{
+  "sms" : {
+    "properties" : {
+      "content" : {
+        "type" : "string",
+      },
+
+      "source_number" : {
+        "type" : "string"
+      },
+
+      "destination_number" : {
+        "type" : "string"
+      },
+
+      "date_sent" : {
+        "type" : "date"
+      },
+
+      "date_received" : {
+        "type" : "date"
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "contact" : {
+    "properties" : {
+      "number" : {
+        "type" : "string",
+      }
+    }
+  }
+}

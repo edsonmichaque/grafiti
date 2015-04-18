@@ -1,0 +1,12 @@
+name: Grafiti
+mode: development
+debug: true
+
+logs:
+  enabled: true
+
+http:
+  version: 1.1
+
+db:
+  config: elasticsearch.yml
