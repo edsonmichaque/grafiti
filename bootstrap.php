@@ -18,13 +18,11 @@
 
   $app = new \Slim\Slim($slimParams);
   $es = new \Elasticsearch\Client($esParams);
-  $http = new \GuzzleHttp\Client();
   $fetcher = new \JsonSchema\Uri\UriRetriever;
   $validator = new \JsonSchema\Validator;
 
   $inject = array(
     'es'        => $es,
-    'http'      => $http,
     'fetcher'   => $fetcher,
     'validator' => $validator
   );
