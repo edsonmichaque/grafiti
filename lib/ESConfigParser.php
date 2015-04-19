@@ -19,7 +19,7 @@
       $opt = $this->opt;
       $url = $opt['protocol'] . '://' . $opt['user'];
       $url .= ':' . $opt['password'];
-      $url .= '@' . $opt['host'] . ':443';
+      $url .= '@' . $opt['host'] . ':' .$opt['port'];
 
       return $url;
     }

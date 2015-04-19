@@ -10,13 +10,6 @@
 
   $app->group('/api', function() use ($app, $inject) {
     $app->group('/sms', function() use ($app, $inject) {
-      $app->get('/', function() use ($inject) {
-        echo 'GET /';
-      });
-
-      $app->get('/:id/?', function($id) use ($inject) {
-        echo 'GET /:id/';
-      });
 
       $app->post('/', function() use ($app, $inject) {
         $schema = $inject['fetcher']->retrieve('file:///' . realpath('./schemas/sms/create.json'));
@@ -41,14 +34,6 @@
           echo 'not valid';
         }
 
-      });
-
-      $app->put('/:id/?', function($id) use ($inject) {
-        echo 'PUT /:id/?';
-      });
-
-      $app->delete('/:id/?', function($id) use ($inject) {
-        echo 'DELETE /:id/';
       });
 
     });
