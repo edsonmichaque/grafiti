@@ -41,43 +41,19 @@
       $app->get('/', function() use ($app, $inject) {
         $word = $app->request->params('q');
         $page = $app->request->params('page');
-        $page = $page === null ? $page : 1;
-      /*  $from = $app->request->params('source')
-        $destination= $app->request->params('destination')
+        $size = 100;
 
+        // SMS dates
+        $from_date = $app->request->params('from_date');
+        $to_date = $app->request->params('to_date');
 
+        // SMS numbers
+        $from_number = $app->request->params('from_number');
+        $to_number = $app->request->params('to_number');
 
-        $query = null;
-        $filter = array();
+        $query = array();
 
-        if ($word) {
-          $query = array(
-            'query' => array(
-              'match_all' => new \stdClass
-            )
-          );
-        } else {
-          $query = array(
-            'query' => array(
-              'match' => array(
-                'content' => $word
-              )
-            )
-          );
-        }
-
-        if ($from !== null) {
-          $filter[] = array('term' => array('source_number' => $from));
-        }
-
-        if ($destination !== null) {
-          $filter[] = array('term' => array('destination_number' => $from));
-        }*/
-
-        $size = 20;
-
-        $body = null;
-
+        // query sms
         if ($word !== null) {
           $body = array(
             'from' => $page,
@@ -97,38 +73,47 @@
             )
           );
         }
-        $esParams = array(
+
+
+
+        // query numbers
+        if ($from_number !== null && $from_number !== null) {
+
+        } else if ($from_number !== null) {
+
+        } else {
+
+        }
+
+        // query dates
+        if ($from_number !== null && $from_number !== null) {
+
+        } else if ($from_number !== null) {
+
+        } else {
+
+        }
+
+
+        $es = array(
           'index' => 'api',
           'type' => 'sms',
           'body' => json_encode($body)
         );
 
-        $results = $inject['es']->search($esParams);
+        $results = $inject['es']->search($es);
         $response = $results['hits']['hits'];
 
-
-        $body = array();
-        $no_pages = ceil((int)$results['hits']['total'] / $size);
-
-        $pg = array();
-        for($i = 1; $i < $no_pages + 1; $i++) {
-          $pg[] = array(
-            "page" => "$i",
-            "url" => "http://localhost:1234/app.php/api/sms?page=$i"
-          );
-        }
-
         $sms = array();
+
         foreach($response as $result) {
           $tmp = $result['_source'];
           $tmp['id'] = $result['_id'];
           array_push($sms, $tmp);
         }
+
+        $body = array();
         $body['messages'] = $sms;
-        //$body['pages'] = array(
-        //  'all' => $pg,
-        //  'current' => "http://localhost:1234/app.php/api/sms?page=$page"
-        //);
 
         $app->response->headers->set('Content-Type', 'application/json');
         $app->response->setBody(json_encode($body));

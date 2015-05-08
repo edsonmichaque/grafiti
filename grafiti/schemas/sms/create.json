@@ -11,9 +11,9 @@
     "destination_number" : {
       "type" : "string"
     },
-    "date_sent" : {
+    "date_received" : {
       "type" : "string"
     }
   },
-  "required" : ["content", "source_number", "destination_number", "date_sent"]
+  "required" : ["content", "source_number", "destination_number", "date_received"]
 }
