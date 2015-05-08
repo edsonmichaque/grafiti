@@ -36,6 +36,26 @@
 
       });
 
+      app->get('/', function() use ($app, $inject) {
+        $word = $app->request->params('q');
+        $body = array(
+          'query' => array(
+            'match' => array(
+              'content' => $word
+            )
+          )
+        );
+
+        $esParams = array(
+          'index' => 'api',
+          'type' => 'sms',
+          'body' => json_encode($body);
+        );
+
+        $results = $inject['es']->search($esParams);
+        $app->response->setBody($results['hits']['hits'][0]['_source']);
+      });
+
     });
 
   });
