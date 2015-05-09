@@ -21,8 +21,15 @@
         $locations = $inject['tag']->tag('@', $smsArray['content']);
 
         $sms = json_decode($smsJson, true);
-        $sms['tags'] = $hashtags;
-        $sms['locations'] = $locations;
+
+        if (!empty($hashtags)) {
+          $sms['tags'] = $hashtags;
+        }
+
+        if (!empty($locations)) {
+          $sms['locations'] = $locations;
+        }
+
 
         $inject['validator']->check(json_decode($smsJson), $schema);
 
