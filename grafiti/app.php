@@ -14,25 +14,31 @@
       // POST /api/sms
       $app->post('/', function() use ($app, $inject) {
         $schema = $inject['fetcher']->retrieve('file:///' . realpath('./schemas/sms/create.json'));
-        $sms = $app->request->getBody();
+        $smsJson = $app->request->getBody();
+        $smsArray = json_decode($smsJson, true);
 
-        $inject['validator']->check(json_decode($sms), $schema);
+        $hashtags = $inject['tag']->tag('#', $smsArray['content']);
+        $locations = $inject['tag']->tag('@', $smsArray['content']);
+
+        $sms = json_decode($smsJson, true);
+        $sms['tags'] = $hashtags;
+        $sms['locations'] = $locations;
+
+        $inject['validator']->check(json_decode($smsJson), $schema);
 
         if ($inject['validator']->isValid()) {
           $esParams = array(
             'index' => 'api',
             'type'  => 'sms',
-            'body'  => $sms
+            'body'  => json_encode($sms)
           );
 
           $ret = $inject['es']->index($esParams);
-          print_r($ret);
+          $app->response->setStatus(201);
         } else {
-
-          foreach ($inject['validator']->getErrors() as $error) {
-            echo sprintf("[%s] %s\n", $error['property'], $error['message']);
-          }
-          echo 'not valid';
+          $badRequest = array('code' => 400, 'description' => 'Bad request');
+          $app->response->headers->set('Content-Type', 'application/json');
+          $app->response->setBody(json_encode($badRequest));
         }
 
       });
@@ -41,15 +47,15 @@
       $app->get('/', function() use ($app, $inject) {
         $word = $app->request->params('q');
         $page = $app->request->params('page');
-        $size = 100;
+        $size = 1000;
 
         // SMS dates
-        $from_date = $app->request->params('from_date');
-        $to_date = $app->request->params('to_date');
+        // $from_date = $app->request->params('from_date');
+        // $to_date = $app->request->params('to_date');
 
         // SMS numbers
-        $from_number = $app->request->params('from_number');
-        $to_number = $app->request->params('to_number');
+        // $from_number = $app->request->params('from_number');
+        // $to_number = $app->request->params('to_number');
 
         $query = array();
 
@@ -73,9 +79,7 @@
             )
           );
         }
-
-
-
+/*
         // query numbers
         if ($from_number !== null && $from_number !== null) {
 
@@ -94,7 +98,7 @@
 
         }
 
-
+*/
         $es = array(
           'index' => 'api',
           'type' => 'sms',
@@ -167,6 +171,68 @@
         $app->response->setBody(json_encode($body));
       });
 
+      $app->get('/hashtag/:tag', function($tag) use ($app, $inject) {
+        $body = array('query' => array('match' => array('tags' => $tag)));
+
+        $es = array(
+          'index' => 'api',
+          'type' => 'sms',
+          'body' => $body
+        );
+
+        $results = $inject['es']->search($es);
+        $response = $results['hits']['hits'];
+
+        $sms = array();
+
+        foreach($response as $result) {
+          $tmp = $result['_source'];
+          $tmp['id'] = $result['_id'];
+          array_push($sms, $tmp);
+        }
+
+        $body = array();
+        $body = array();
+
+        if (!empty($sms)) {
+          $body['messages'] = $sms;
+          $app->response->headers->set('Content-Type', 'application/json');
+          $app->response->setBody(json_encode($body));
+        } else {
+          $app->response->setStatus(404);
+        }
+      });
+
+      $app->get('/location/:tag', function($tag) use ($app, $inject) {
+        $body = array('query' => array('match' => array('locations' => $tag)));
+
+        $es = array(
+          'index' => 'api',
+          'type' => 'sms',
+          'body' => $body
+        );
+
+        $results = $inject['es']->search($es);
+        $response = $results['hits']['hits'];
+
+        $sms = array();
+
+        foreach($response as $result) {
+          $tmp = $result['_source'];
+          $tmp['id'] = $result['_id'];
+          array_push($sms, $tmp);
+        }
+
+        $body = array();
+
+        if (!empty($sms)) {
+          $body['messages'] = $sms;
+          $app->response->headers->set('Content-Type', 'application/json');
+          $app->response->setBody(json_encode($body));
+        } else {
+          $app->response->setStatus(404);
+        }
+      });
 
     });
 

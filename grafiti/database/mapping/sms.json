@@ -3,6 +3,7 @@
     "properties" : {
       "content" : {
         "type" : "string",
+        "analyzer": "portuguese"
       },
 
       "source_number" : {

@@ -20,11 +20,13 @@
   $es = new \Elasticsearch\Client($esParams);
   $fetcher = new \JsonSchema\Uri\UriRetriever;
   $validator = new \JsonSchema\Validator;
+  $tag = new Tag;
 
   $inject = array(
     'es'        => $es,
     'fetcher'   => $fetcher,
-    'validator' => $validator
+    'validator' => $validator,
+    'tag' => $tag,
   );
 
 ?>
