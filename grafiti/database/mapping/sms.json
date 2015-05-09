@@ -15,11 +15,25 @@
       },
 
       "date_sent" : {
-        "type" : "date"
+        "type" : "date",
+        "format" : "basic_date_time"
       },
 
       "date_received" : {
-        "type" : "date"
+        "type" : "date",
+        "format" : "basic_date_time"
+      },
+
+      "blacklisted" : {
+        "type" : "boolean"
+      },
+
+      "upvotes" : {
+        "type" : "integer"
+      },
+
+      "downvotes" : {
+        "type" : "integer"
       }
     }
   }

@@ -3,27 +3,33 @@
   "type" : "object",
   "properties" : {
     "content" : {
-      "type" : "string",
-      "analyzer" : "portuguese"
+      "type" : "string"
     },
+
     "source_number" : {
       "type" : "string"
     },
+
     "destination_number" : {
       "type" : "string"
     },
+
     "date_received" : {
-      "type" : "basic_date_time"
+      "type" : "string"
     },
+
     "date_sent" : {
-      "type" : "basic_date_time"
+      "type":"string"
     },
+
     "blacklisted" : {
       "type" : "boolean"
     },
+
     "upvotes" : {
       "type" : "integer"
     },
+
     "downvotes" : {
       "type" : "integer"
     }
@@ -33,6 +39,7 @@
     "source_number",
     "destination_number",
     "date_received",
+    "date_sent",
     "upvotes",
     "downvotes",
     "blacklisted"
