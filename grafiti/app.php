@@ -30,7 +30,7 @@
           $sms['locations'] = $locations;
         }
 
-
+        echo 'x';
         $inject['validator']->check(json_decode($smsJson), $schema);
 
         if ($inject['validator']->isValid()) {
