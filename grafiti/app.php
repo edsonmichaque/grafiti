@@ -75,7 +75,8 @@
               'match' => array(
                 'content' => $word
               )
-            )
+            ),
+            'sort' => array('date_received' => array('order' => 'desc'))
           );
         } else {
           $body = array(
@@ -83,7 +84,8 @@
             'size' => $size,
             'query' => array(
               'match_all' => new \stdClass
-            )
+            ),
+            'sort' => array('date_received' => array('order' => 'desc'))
           );
         }
 /*
